@@ -46,7 +46,7 @@ public class ClientApp extends Application {
         }
     }
 
-    void setCheckBoxNotSelected(int number, int table) {
+    void setCheckBoxNotSelected(int number, int table) { //Dopisać do tego testy trzeba
         CheckBox temp[];
         if (table == 1) {
             temp = checkbox1;
