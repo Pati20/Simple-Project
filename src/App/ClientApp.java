@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -17,26 +18,49 @@ public class ClientApp extends Application {
     // GameInstance gameInstance; - klasa w produkcji jeszcze
     private Stage mainWindow;
     private Scene startScene, gameScene, waitScene, playersWaitScene, winScene;
+    //private CheckBox checkBox1,checkBox2,checkBox3,checkBox4,checkBox5,checkBox6;
+    private CheckBox checkbox1[] = new CheckBox[6];
+    private CheckBox checkbox2[] = new CheckBox[6];
+    private int players,boot;
     //   public ClientCommunicator clientCommunicator;
     TextField addressField;
+
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    boolean checkPlayersNumber(Double numberOfHuman, Double numberOfBots) {
-        int sum = numberOfHuman.intValue() + numberOfBots.intValue();
+    boolean checkPlayersNumber(Integer numberOfHuman, Integer numberOfBots) {
+        int sum = numberOfHuman + numberOfBots;
         if (sum == 2 || sum == 3 || sum == 4 || sum == 6) {
             //startGame(numberOfHuman.intValue(), numberOfBots.intValue());
             return true;
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setResizable(false);
             alert.setTitle("Ostrzeżenie");
             alert.setHeaderText("Nieprawidłowa ilość graczy");
-            alert.setContentText("Podane wartości nie są zgodne z zasadami. Gra jest przeznaczona dla 2,3,4 lub 6 graczy.");
+            alert.setContentText("Podane wartości nie są zgodne z zasadami. \n Gra jest przeznaczona dla 2,3,4 lub 6 graczy.");
             alert.show();
             return false;
         }
+    }
+
+    void setCheckBoxNotSelected(int number, int table) {
+        CheckBox temp[];
+        if (table == 1) {
+            temp = checkbox1;
+            players = number;
+        } else {
+            temp = checkbox2;
+            boot = number;
+        }
+        for (int i = 0; i < 6; i++) {
+            if (i == number - 1) continue;
+            temp[i].setSelected(false);
+
+        }
+        System.out.println(number);
     }
 
     //dopracować
@@ -114,34 +138,29 @@ public class ClientApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         mainWindow = primaryStage;
-        mainWindow.setTitle("ChineseCheckers");
+        mainWindow.setTitle("Chińskie warcaby ");
         mainWindow.setOnCloseRequest(e -> onExit());
 
         VBox vbox = new VBox(15);
         vbox.setPadding(new Insets(30));
 
         Label label1 = new Label("Liczba graczy");
-        Slider slider1 = new Slider(1, 6, 2);
-        slider1.setShowTickMarks(true);
-        slider1.setShowTickLabels(true);
-        slider1.setMajorTickUnit(1);
-        slider1.setMinorTickCount(0);
-        slider1.setBlockIncrement(1);
-        slider1.setSnapToTicks(true);
-        slider1.setOnMouseClicked(event -> System.out.println(slider1.getValue()));
-
         Label label2 = new Label("Liczba botów");
-        Slider slider2 = new Slider(0, 5, 0);
-        slider2.setShowTickMarks(true);
-        slider2.setShowTickLabels(true);
-        slider2.setMajorTickUnit(1);
-        slider2.setMinorTickCount(0);
-        slider2.setBlockIncrement(1);
-        slider2.setSnapToTicks(true);
-        slider2.setOnMouseClicked(event -> System.out.println(slider2.getValue()));
+
+        for (int i = 0; i < 6;i++) {
+            int j = i + 1;
+            checkbox1[i] = new CheckBox("" + (i + 1));
+            checkbox1[i].setOnMouseClicked(event -> setCheckBoxNotSelected(j, 1));
+            checkbox2[i] = new CheckBox("" + (i + 1));
+            checkbox2[i].setOnMouseClicked(event -> setCheckBoxNotSelected(j, 2));
+        }
+        HBox hboxOfPlayers = new HBox(8);
+        hboxOfPlayers.getChildren().addAll(checkbox1);
+        HBox hboxOfBoot = new HBox(8);
+        hboxOfBoot.getChildren().addAll(checkbox2);
 
         Button button1 = new Button("Utwórz nową grę");
-        button1.setOnMouseClicked(event -> checkPlayersNumber(slider1.getValue(), slider2.getValue()));
+        button1.setOnMouseClicked(event -> checkPlayersNumber(players,boot));
 
         Label label3 = new Label("Adres serwera");
         addressField = new TextField ();
@@ -150,7 +169,7 @@ public class ClientApp extends Application {
         Button button2 = new Button("Dołącz do trwającej gry");
         // button2.setOnMouseClicked(event -> joinGame());
 
-        vbox.getChildren().addAll(label3, addressField,new Separator(), label1, slider1, label2, slider2, button1, new Separator(), button2);
+        vbox.getChildren().addAll(label3, addressField,new Separator(), label1,hboxOfPlayers, label2, hboxOfBoot, button1, new Separator(), button2);
 
         Label playersWaitLabel = new Label("trwa\ndołączanie\ngraczy");
         playersWaitLabel.setFont(Font.font("Verdana", 30));
