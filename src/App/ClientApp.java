@@ -18,7 +18,6 @@ public class ClientApp extends Application {
     // GameInstance gameInstance; - klasa w produkcji jeszcze
     private Stage mainWindow;
     private Scene startScene, gameScene, waitScene, playersWaitScene, winScene;
-    //private CheckBox checkBox1,checkBox2,checkBox3,checkBox4,checkBox5,checkBox6;
     private CheckBox checkbox1[] = new CheckBox[6];
     private CheckBox checkbox2[] = new CheckBox[6];
     private int players,boot;
@@ -30,7 +29,7 @@ public class ClientApp extends Application {
         launch(args);
     }
 
-    boolean checkPlayersNumber(Integer numberOfHuman, Integer numberOfBots) {
+    public boolean checkPlayersNumber(Integer numberOfHuman, Integer numberOfBots) {
         int sum = numberOfHuman + numberOfBots;
         if (sum == 2 || sum == 3 || sum == 4 || sum == 6) {
             //startGame(numberOfHuman.intValue(), numberOfBots.intValue());
@@ -46,14 +45,14 @@ public class ClientApp extends Application {
         }
     }
 
-    void setCheckBoxNotSelected(int number, int table) { //Dopisać do tego testy trzeba
+    void setCheckBoxNotSelected(int number, int table) {
         CheckBox temp[];
         if (table == 1) {
             temp = checkbox1;
-            players = number;
+            setPlayers(number);
         } else {
             temp = checkbox2;
-            boot = number;
+            setBoot(number);
         }
         for (int i = 0; i < 6; i++) {
             if (i == number - 1) continue;
@@ -62,6 +61,23 @@ public class ClientApp extends Application {
         }
         System.out.println(number);
     }
+
+    public void setPlayers(int players) {
+        this.players = players;
+    }
+
+    public void setBoot(int boot) {
+        this.boot = boot;
+    }
+
+    public int getPlayers() {
+        return players;
+    }
+
+    public int getBoot() {
+        return boot;
+    }
+
 
     //dopracować
 //    public void startGame(int numberOfHuman, int numberOfBots) {
@@ -160,7 +176,7 @@ public class ClientApp extends Application {
         hboxOfBoot.getChildren().addAll(checkbox2);
 
         Button button1 = new Button("Utwórz nową grę");
-        button1.setOnMouseClicked(event -> checkPlayersNumber(players,boot));
+        button1.setOnMouseClicked(event -> checkPlayersNumber(getPlayers(),getBoot()));
 
         Label label3 = new Label("Adres serwera");
         addressField = new TextField ();

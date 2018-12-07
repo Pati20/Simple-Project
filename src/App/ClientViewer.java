@@ -15,14 +15,14 @@ import static java.lang.Integer.parseInt;
 
 public class ClientViewer extends Thread {
 
-    //variables to communicate
+    // Zmienne odpowiedzialne za komunikację z serwerem
     Socket socket = null;
     PrintWriter out = null;
     BufferedReader in = null;
     String input = "";
     List<String> comand = new ArrayList<>();
 
-    //current game variables
+    //Zmienne odpowiedzialne za przebieg gry
     int clientID = 0;
     int playerID = 0;
     int numberOfHuman;
@@ -54,6 +54,9 @@ public class ClientViewer extends Thread {
         activityOfClient = false;
     }
 
+    /**
+     * Metoda odopwiedzialna za łączenie się z serwerem
+     */
     public void SocketListener() {
 
         try {
@@ -68,7 +71,6 @@ public class ClientViewer extends Thread {
         System.out.println("Client socket " + socket.getLocalPort());
         conect();
     }
-
 
     public void conect() {
         out.println("CONECT");
